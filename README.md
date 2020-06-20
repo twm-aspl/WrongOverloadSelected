@@ -1,13 +1,12 @@
 # Suspect wrong overload selected by Fable
 
-This repo reproduces and issue I've encountered while trying to use the Aether library in a Fable client.
+This reproduces an issue I've encountered while trying to use the Aether library in a Fable client.
 
 The same F# code is producing different results on the server vs. the client.
 
 I've raised the issue on the Gitter forum and the consensus seems to be that Fable is selecting the wrong overload method:
 
-"It looks like fable is selecting the wrong overload for the >?> operator between Child.g_ and Grandchild.x_. Stepping through in rider, the selected overload is static member (>?>) (Prism, (g2, s2): Prism<'b,'c>) which calls Option.bind and so returns Grandchild.x directly, but the emitted javascript selects overload static member (>?>) (Prism, (g2, s2): Lens<'b,'c>) which calls Option.map, which results in Some g.x and so in test3 produces Some None. The 0 comes from test3 | 0 being passed to printfn.
- once I patched the javascript to use the other overload, i got the expected output"
+"It looks like fable is selecting the wrong overload for the >?> operator between Child.g_ and Grandchild.x_. Stepping through in rider, the selected overload is static member (>?>) (Prism, (g2, s2): Prism<'b,'c>) which calls Option.bind and so returns Grandchild.x directly, but the emitted javascript selects overload static member (>?>) (Prism, (g2, s2): Lens<'b,'c>) which calls Option.map, which results in Some g.x and so in test3 produces Some None (i.e.: "Some undefined")...once I patched the javascript to use the other overload, i got the expected output"
 
 
 * The essential test code is in Shared.fs.
